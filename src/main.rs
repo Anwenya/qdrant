@@ -122,10 +122,10 @@ struct Args {
     #[arg(long, value_name = "PATH")]
     storage_path: Option<String>,
 
-    #[arg(long, default_value_t=6334)]
+    #[arg(long, default_value_t = 6334)]
     grpc_port: u16,
 
-    #[arg(long, default_value_t=6335)]
+    #[arg(long, default_value_t = 6335)]
     http_port: u16,
 }
 
@@ -146,13 +146,12 @@ fn main() -> anyhow::Result<()> {
     let mut settings = Settings::new(args.config_path)?;
 
     // 覆盖
-    if let Some(storage_path) = args.storage_path{
+    if let Some(storage_path) = args.storage_path {
         settings.storage.storage_path = storage_path;
     }
     settings.service.grpc_port = Some(args.grpc_port);
     settings.service.http_port = args.http_port;
-    
-    
+
     let reporting_enabled = !settings.telemetry_disabled && !args.disable_telemetry;
 
     let reporting_id = TelemetryCollector::generate_id();
