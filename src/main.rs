@@ -122,6 +122,9 @@ struct Args {
     #[arg(long, value_name = "PATH")]
     storage_path: Option<String>,
 
+    #[arg(long, value_name = "HOST")]
+    host: String,
+
     #[arg(long, default_value_t = 6334)]
     grpc_port: u16,
 
@@ -151,6 +154,9 @@ fn main() -> anyhow::Result<()> {
     }
     settings.service.grpc_port = Some(args.grpc_port);
     settings.service.http_port = args.http_port;
+    if args.host != "" {
+        settings.service.host = args.host;
+    }
 
     let reporting_enabled = !settings.telemetry_disabled && !args.disable_telemetry;
 
