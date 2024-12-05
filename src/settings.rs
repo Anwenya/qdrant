@@ -171,14 +171,15 @@ impl Settings {
         let env = env::var("RUN_MODE").unwrap_or_else(|_| "development".into());
         let config_path_env = format!("config/{env}");
 
+        // 不要把配置文件路径输出到日志中
         // Report error if main or env config files exist, report warning if not
         // Check if main and env configuration file
-        load_errors.extend(
-            ["config/config", &config_path_env]
-                .into_iter()
-                .filter(|path| !config_exists(path))
-                .map(|path| LogMsg::Warn(format!("Config file not found: {path}"))),
-        );
+        // load_errors.extend(
+        //     ["config/config", &config_path_env]
+        //         .into_iter()
+        //         .filter(|path| !config_exists(path))
+        //         .map(|path| LogMsg::Warn(format!("Config file not found: {path}"))),
+        // );
 
         // Configuration builder: define different levels of configuration files
         let mut config = Config::builder()

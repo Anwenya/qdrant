@@ -118,6 +118,15 @@ struct Args {
     /// Run stacktrace collector. Used for debugging.
     #[arg(long, action, default_value_t = false)]
     stacktrace: bool,
+
+    #[arg(long, value_name = "PATH")]
+    storage_path: Option<String>,
+
+    #[arg(long, default_value_t=6334)]
+    grpc_port: u16,
+
+    #[arg(long, default_value_t=6335)]
+    http_port: u16,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -134,8 +143,16 @@ fn main() -> anyhow::Result<()> {
 
     remove_started_file_indicator();
 
-    let settings = Settings::new(args.config_path)?;
+    let mut settings = Settings::new(args.config_path)?;
 
+    // 覆盖
+    if let Some(storage_path) = args.storage_path{
+        settings.storage.storage_path = storage_path;
+    }
+    settings.service.grpc_port = Some(args.grpc_port);
+    settings.service.http_port = args.http_port;
+    
+    
     let reporting_enabled = !settings.telemetry_disabled && !args.disable_telemetry;
 
     let reporting_id = TelemetryCollector::generate_id();
@@ -151,7 +168,7 @@ fn main() -> anyhow::Result<()> {
     memory::madvise::set_global(settings.storage.mmap_advice);
     segment::vector_storage::common::set_async_scorer(settings.storage.async_scorer);
 
-    welcome(&settings);
+    // welcome(&settings);
 
     if let Some(recovery_warning) = &settings.storage.recovery_mode {
         log::warn!("Qdrant is loaded in recovery mode: {}", recovery_warning);
