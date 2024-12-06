@@ -11,6 +11,7 @@ mod startup;
 mod tonic;
 mod tracing;
 
+use std::borrow::Borrow;
 use std::io::Error;
 use std::sync::Arc;
 use std::thread;
@@ -150,7 +151,8 @@ fn main() -> anyhow::Result<()> {
 
     // 覆盖
     if let Some(storage_path) = args.storage_path {
-        settings.storage.storage_path = storage_path;
+        settings.storage.storage_path = storage_path.clone();
+        settings.storage.snapshots_path = storage_path.clone();
     }
     settings.service.grpc_port = Some(args.grpc_port);
     settings.service.http_port = args.http_port;
@@ -173,7 +175,8 @@ fn main() -> anyhow::Result<()> {
     memory::madvise::set_global(settings.storage.mmap_advice);
     segment::vector_storage::common::set_async_scorer(settings.storage.async_scorer);
 
-    // welcome(&settings);
+    // 仅输出版本信息
+    welcome(&settings);
 
     if let Some(recovery_warning) = &settings.storage.recovery_mode {
         log::warn!("Qdrant is loaded in recovery mode: {}", recovery_warning);

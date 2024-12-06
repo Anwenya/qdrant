@@ -76,18 +76,19 @@ pub fn welcome(settings: &Settings) {
         Err(_) => true_color = false,
     }
 
-    let title = [
-        r"           _                 _    ",
-        r"  __ _  __| |_ __ __ _ _ __ | |_  ",
-        r" / _` |/ _` | '__/ _` | '_ \| __| ",
-        r"| (_| | (_| | | | (_| | | | | |_  ",
-        r" \__, |\__,_|_|  \__,_|_| |_|\__| ",
-        r"    |_|                           ",
-    ];
-    for line in title {
-        println!("{}", paint_red(line, true_color));
-    }
-    println!();
+    // 不输出
+    // let title = [
+    //     r"           _                 _    ",
+    //     r"  __ _  __| |_ __ __ _ _ __ | |_  ",
+    //     r" / _` |/ _` | '__/ _` | '_ \| __| ",
+    //     r"| (_| | (_| | | | (_| | | | | |_  ",
+    //     r" \__, |\__,_|_|  \__,_|_| |_|\__| ",
+    //     r"    |_|                           ",
+    // ];
+    // for line in title {
+    //     println!("{}", paint_red(line, true_color));
+    // }
+    // println!();
 
     // Print current version and, if available, first 8 characters of the git commit hash
     let git_commit_info = get_git_commit_id()
@@ -119,11 +120,11 @@ pub fn welcome(settings: &Settings) {
         settings.service.http_port
     );
 
-    println!(
-        "{} {}",
-        paint_green("Access web UI at", true_color),
-        paint_blue(&ui_link, true_color).underline()
-    );
+    // println!(
+    //     "{} {}",
+    //     paint_green("Access web UI at", true_color),
+    //     paint_blue(&ui_link, true_color).underline()
+    // );
     println!();
 }
 
