@@ -11,8 +11,8 @@ mod startup;
 mod tonic;
 mod tracing;
 
-use std::borrow::Borrow;
 use std::io::Error;
+use std::path::Path;
 use std::sync::Arc;
 use std::thread;
 use std::thread::JoinHandle;
@@ -152,7 +152,8 @@ fn main() -> anyhow::Result<()> {
     // 覆盖
     if let Some(storage_path) = args.storage_path {
         settings.storage.storage_path = storage_path.clone();
-        settings.storage.snapshots_path = storage_path.clone();
+        let snap = Path::new(&storage_path);
+        settings.storage.snapshots_path = snap.join("snapshots").to_string_lossy().to_string();
     }
     settings.service.grpc_port = Some(args.grpc_port);
     settings.service.http_port = args.http_port;
